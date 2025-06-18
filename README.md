@@ -385,11 +385,15 @@ This BookStore application is fully production-ready with:
 **Ready to deploy and serve users worldwide!** 🌍
 
 SignUp Page
-![Screenshot 2025-04-09 195131](https://github.com/user-attachments/assets/f29a14bb-25fc-407d-bb9d-6ea4a4e043e1)
+![Screenshot 2025-04-09 195405](https://github.com/user-attachments/assets/49a33dc0-42c3-4b29-b84c-5077246c56a7)
+
+
 Login Page
-![Screenshot 2025-04-09 195405](https://github.com/user-attachments/assets/fede3c05-3500-441b-807c-548d3e87e5a1)
+![Screenshot 2025-04-09 195131](https://github.com/user-attachments/assets/37fd3a83-b35f-4d11-9127-acea970ee6b5)
+
+
 Dashboard.js
-![Screenshot 2025-04-09 180629](https://github.com/user-attachments/assets/a898b6c2-7a7c-408b-b6b4-a61a4f0fbb5e)
+![Screenshot 2025-04-09 180629](https://github.com/user-attachments/assets/f6984462-f730-4050-84a8-a29dfe121496)
 
 # 📚 Bookstore API & Frontend
 
@@ -436,7 +440,7 @@ A full-stack Bookstore Application with **JWT authentication**, **CRUD operation
 1. Clone the repo
 
 ```bash
-git clone https://github.com/yourusername/bookstore.git
-cd bookstore
+git clone https://github.com/adityakmrtiwari/Bookstore.git
+cd Bookstore
 
 
