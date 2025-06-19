@@ -2,10 +2,16 @@
 
 A modern, responsive full-stack web application for managing personal book collections with user authentication, CRUD operations, and beautiful UI/UX.
 
-![BookStore](https://img.shields.io/badge/BookStore-Production%20Ready-brightgreen)
+![BookStore](https://img.shields.io/badge/BookStore-Live%20Production-brightgreen)
 ![React](https://img.shields.io/badge/React-18.2.0-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-green)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-blue)
+
+## 🌐 Live Demo
+
+**Frontend**: https://bookstore-psi-lime.vercel.app/  
+**Backend API**: https://bookstore-backend-6p4c.onrender.com  
+**Health Check**: https://bookstore-backend-6p4c.onrender.com/api/health
 
 ## ✨ Features
 
@@ -28,6 +34,7 @@ A modern, responsive full-stack web application for managing personal book colle
 - **Protected Routes** - User-specific data access
 - **Input Validation** - Server-side validation and sanitization
 - **Error Handling** - Comprehensive error management
+- **CORS Protection** - Secure cross-origin resource sharing
 
 ## 🚀 Tech Stack
 
@@ -37,16 +44,16 @@ A modern, responsive full-stack web application for managing personal book colle
 | React | 18.2.0 | UI Framework |
 | React Router | 6.8.0 | Client-side routing |
 | CSS3 | - | Styling with modern features |
-| Axios | 1.3.0 | HTTP client |
+| Axios | 1.8.4 | HTTP client |
 
 ### Backend
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| Node.js | 18+ | Runtime environment |
+| Node.js | 22.16.0 | Runtime environment |
 | Express.js | 4.18.2 | Web framework |
 | MongoDB | 6.0+ | Database |
-| Mongoose | 7.0.0 | ODM for MongoDB |
-| JWT | 9.0.0 | Authentication |
+| Mongoose | 8.13.2 | ODM for MongoDB |
+| JWT | 9.0.2 | Authentication |
 | bcryptjs | 2.4.3 | Password hashing |
 | cors | 2.8.5 | Cross-origin resource sharing |
 
@@ -104,6 +111,7 @@ Bookstore/
 │   │   └── errorHandler.js
 │   ├── server.js          # Express server
 │   └── package.json
+├── DEPLOYMENT.md          # Deployment guide
 └── README.md
 ```
 
@@ -118,7 +126,7 @@ Bookstore/
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/adityakmrtiwari/Bookstore.git
    cd Bookstore/backend
    ```
 
@@ -133,7 +141,9 @@ Bookstore/
    PORT=5000
    MONGODB_URI=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret_key
-   NODE_ENV=production
+   JWT_REFRESH_SECRET=your_refresh_secret_key
+   NODE_ENV=development
+   FRONTEND_URL=http://localhost:3000
    ```
 
 4. **Start the server**
@@ -157,10 +167,10 @@ Bookstore/
    npm install
    ```
 
-3. **Configure API endpoint**
-   Update `src/services/api.js` with your backend URL:
-   ```javascript
-   const API_BASE_URL = 'http://localhost:5000/api';
+3. **Environment Configuration**
+   Create a `.env` file in the frontend directory:
+   ```env
+   REACT_APP_API_BASE_URL=http://localhost:5000/api
    ```
 
 4. **Start the development server**
@@ -179,6 +189,7 @@ Bookstore/
 - `POST /api/auth/signup` - User registration
 - `POST /api/auth/login` - User login
 - `GET /api/auth/verify` - Verify JWT token
+- `POST /api/auth/refresh` - Refresh JWT token
 
 ### Books
 - `GET /api/books` - Get user's books
@@ -188,6 +199,9 @@ Bookstore/
 
 ### Statistics
 - `GET /api/stats` - Get user statistics
+
+### Health Check
+- `GET /api/health` - Server health status
 
 ## 🎨 UI Components
 
@@ -204,47 +218,30 @@ Bookstore/
 
 ## 🚀 Deployment
 
-### Backend Deployment (Heroku/Railway/Render)
+### Production Deployment
 
-1. **Set environment variables**
-   ```env
-   MONGODB_URI=your_production_mongodb_uri
-   JWT_SECRET=your_production_jwt_secret
-   NODE_ENV=production
-   PORT=process.env.PORT
-   ```
-
-2. **Deploy to platform**
-   ```bash
-   git push heroku main
-   ```
-
-### Frontend Deployment (Netlify/Vercel)
-
-1. **Build the project**
-   ```bash
-   npm run build
-   ```
-
-2. **Deploy build folder**
-   - Upload `build/` folder to your hosting platform
-   - Configure redirects for React Router
+This application is currently deployed using:
+- **Frontend**: Vercel (https://bookstore-psi-lime.vercel.app/)
+- **Backend**: Render (https://bookstore-backend-6p4c.onrender.com)
+- **Database**: MongoDB Atlas
 
 ### Environment Variables for Production
 
-**Backend (.env)**
+**Backend (Render)**
 ```env
-PORT=5000
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/bookstore
-JWT_SECRET=your_super_secure_jwt_secret_key_here
+MONGODB_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_jwt_secret_key
+JWT_REFRESH_SECRET=your_refresh_secret_key
 NODE_ENV=production
-CORS_ORIGIN=https://your-frontend-domain.com
+FRONTEND_URL=https://bookstore-psi-lime.vercel.app
 ```
 
-**Frontend (api.js)**
-```javascript
-const API_BASE_URL = 'https://your-backend-domain.com/api';
+**Frontend (Vercel)**
+```env
+REACT_APP_API_BASE_URL=https://bookstore-backend-6p4c.onrender.com/api
 ```
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ## 🔧 Configuration
 
@@ -256,7 +253,11 @@ const API_BASE_URL = 'https://your-backend-domain.com/api';
   name: String,
   email: String (unique),
   password: String (hashed),
-  createdAt: Date
+  role: String (enum: ['user', 'admin']),
+  isActive: Boolean,
+  lastLogin: Date,
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
@@ -270,7 +271,8 @@ const API_BASE_URL = 'https://your-backend-domain.com/api';
   rating: Number,
   publishedDate: Date,
   userId: ObjectId (ref: User),
-  createdAt: Date
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
@@ -290,6 +292,7 @@ const API_BASE_URL = 'https://your-backend-domain.com/api';
 - JWT token-based authentication
 - Protected routes and middleware
 - Session management
+- Token refresh functionality
 
 ### Book Management
 - Add new books with validation
@@ -326,8 +329,9 @@ const API_BASE_URL = 'https://your-backend-domain.com/api';
    - Clear browser storage if needed
 
 3. **CORS Errors**
-   - Update CORS_ORIGIN in backend
+   - Update FRONTEND_URL in backend
    - Check frontend API URL configuration
+   - Ensure no trailing slashes in URLs
 
 4. **Build Errors**
    - Clear node_modules and reinstall
@@ -365,35 +369,37 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👨‍💻 Developer
 
-**Created by**: [Your Name]
-**GitHub**: [Your GitHub Profile]
-**LinkedIn**: [Your LinkedIn Profile]
+**Created by**: Aditya Kumar Tiwari  
+**GitHub**: [adityakmrtiwari](https://github.com/adityakmrtiwari)  
+**Project**: [Bookstore Repository](https://github.com/adityakmrtiwari/Bookstore)
 
 ---
 
 ## 🎉 Production Ready!
 
-This BookStore application is fully production-ready with:
+This BookStore application is fully production-ready and **LIVE** with:
 - ✅ Modern, responsive UI/UX
 - ✅ Secure authentication system
 - ✅ Full CRUD functionality
 - ✅ Database integration
 - ✅ Error handling
 - ✅ Performance optimization
-- ✅ Deployment configuration
+- ✅ Production deployment
+- ✅ CORS security
+- ✅ Environment configuration
 
-**Ready to deploy and serve users worldwide!** 🌍
+**Successfully deployed and serving users worldwide!** 🌍
 
-SignUp Page
-![Screenshot 2025-04-09 195405](https://github.com/user-attachments/assets/49a33dc0-42c3-4b29-b84c-5077246c56a7)
+## 📸 Screenshots
 
+### SignUp Page
+![SignUp Page](https://github.com/user-attachments/assets/49a33dc0-42c3-4b29-b84c-5077246c56a7)
 
-Login Page
-![Screenshot 2025-04-09 195131](https://github.com/user-attachments/assets/37fd3a83-b35f-4d11-9127-acea970ee6b5)
+### Login Page
+![Login Page](https://github.com/user-attachments/assets/37fd3a83-b35f-4d11-9127-acea970ee6b5)
 
-
-Dashboard.js
-![Screenshot 2025-04-09 180629](https://github.com/user-attachments/assets/f6984462-f730-4050-84a8-a29dfe121496)
+### Dashboard
+![Dashboard](https://github.com/user-attachments/assets/f6984462-f730-4050-84a8-a29dfe121496)
 
 # 📚 Bookstore API & Frontend
 
