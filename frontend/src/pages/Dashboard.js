@@ -3,20 +3,22 @@ import { useNavigate, Link } from 'react-router-dom';
 import BookForm from '../components/BookForm';
 import BookList from '../components/BookList';
 import api from '../services/api';
-import './Dashboard.css';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
-function Dashboard({ setIsAuthenticated }) {
+function Dashboard({ setIsAuthenticated, user }) {
   const [selectedBook, setSelectedBook] = useState(null);
   const [fetchTrigger, setFetchTrigger] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showForm, setShowForm] = useState(false);
   const navigate = useNavigate();
 
   // Logo click: always go to home page
-  const handleLogoClick = (e) => {
-    e.preventDefault();
-    navigate('/');
-  };
+  // const handleLogoClick = (e) => {
+  //   e.preventDefault();
+  //   navigate('/');
+  // };
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem('token');
@@ -38,88 +40,92 @@ function Dashboard({ setIsAuthenticated }) {
     verifyAuth();
   }, [handleLogout]);
 
+  // Show form for add or edit
+  const handleAddBook = () => {
+    setSelectedBook(null);
+    setShowForm(true);
+  };
+  const handleEditBook = (book) => {
+    setSelectedBook(book);
+    setShowForm(true);
+  };
+  const handleFormSuccess = () => {
+    setFetchTrigger(prev => prev + 1);
+    setSelectedBook(null);
+    setShowForm(false);
+  };
+  const handleFormCancel = () => {
+    setSelectedBook(null);
+    setShowForm(false);
+  };
+
   if (loading) {
     return (
-      <div className="dashboard-loading">
-        <div className="loading-spinner"></div>
-        <p>Loading your dashboard...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-accent-100 to-secondary">
+        <div className="card flex flex-col items-center gap-6 fade-in">
+          <div className="loading-spinner"></div>
+          <p className="text-accent-800 text-lg font-medium">Loading your dashboard...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="dashboard-error">
-        <div className="error-icon">⚠️</div>
-        <h2>Oops! Something went wrong</h2>
-        <p>{error}</p>
-        <button onClick={() => window.location.reload()} className="btn btn-primary">
-          <span className="icon">🔄</span>
-          Try Again
-        </button>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-accent-100 to-secondary">
+        <div className="card flex flex-col items-center gap-6 fade-in">
+          <div className="text-3xl">⚠️</div>
+          <h2 className="text-2xl font-bold text-primary">Oops! Something went wrong</h2>
+          <p className="text-accent-600">{error}</p>
+          <button onClick={() => window.location.reload()} className="btn btn-primary">
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="dashboard-container">
-      <nav className="dashboard-nav compact-nav">
-        <div className="nav-content compact-nav-content">
-          <button onClick={handleLogoClick} className="logo" title="Bookstore Home">
-            <img src="/logo-bookstore.jpeg" alt="Bookstore Logo" className="logo-img" />
-            <span className="logo-title">BookStore</span>
-          </button>
-          <div className="nav-links compact-nav-links">
-            <Link to="/" className="btn btn-outline">
-              <span className="icon">🏠</span>
-              Home
-            </Link>
-            <button onClick={handleLogout} className="btn btn-danger">
-              <span className="icon">🚪</span>
-              Logout
-            </button>
+    <>
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-accent-100 to-secondary">
+        <Header isAuthenticated={true} setIsAuthenticated={setIsAuthenticated} user={user} />
+        <main className="flex-1 flex flex-col items-center px-4 py-8 gap-12">
+          <div className="w-full max-w-3xl flex flex-col gap-8">
+            {showForm ? (
+              <>
+                <div className="flex justify-between items-center mb-4">
+                  <button onClick={handleFormCancel} className="btn btn-outline">
+                    ← Back
+                  </button>
+                  <h2 className="text-2xl font-bold text-primary">{selectedBook ? 'Edit Book' : 'Add Book'}</h2>
+                  <span></span>
+                </div>
+                <BookForm
+                  selectedBook={selectedBook}
+                  setSelectedBook={setSelectedBook}
+                  onSuccess={handleFormSuccess}
+                  onCancel={handleFormCancel}
+                />
+              </>
+            ) : (
+              <>
+                <div className="flex justify-between items-center mb-2">
+                  <h2 className="text-2xl font-bold text-primary">Dashboard</h2>
+                  <button onClick={handleAddBook} className="btn btn-primary">
+                    + Add Book
+                  </button>
+                </div>
+                <BookList
+                  setSelectedBook={handleEditBook}
+                  fetchTrigger={fetchTrigger}
+                />
+              </>
+            )}
           </div>
-        </div>
-      </nav>
-
-      <main className="dashboard-content">
-        <div className="dashboard-grid">
-          <section className="form-section">
-            <BookForm
-              selectedBook={selectedBook}
-              setSelectedBook={setSelectedBook}
-              onSuccess={() => {
-                setFetchTrigger(prev => prev + 1);
-                setSelectedBook(null);
-              }}
-            />
-          </section>
-
-          <section className="list-section">
-            <BookList
-              setSelectedBook={setSelectedBook}
-              fetchTrigger={fetchTrigger}
-            />
-          </section>
-        </div>
-      </main>
-
-      <footer className="dashboard-footer compact-footer">
-        <div className="footer-content compact-footer-content">
-          <span>&copy; 2025 BookStore</span>
-          <span className="footer-links compact-footer-links">
-            <a href="https://github.com/adityakmrtiwari" target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-              <span className="icon">🐙</span>
-              GitHub
-            </a>
-            <a href="https://www.linkedin.com/in/adityakmrtiwari/" target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-              <span className="icon">💼</span>
-              LinkedIn
-            </a>
-          </span>
-        </div>
-      </footer>
-    </div>
+        </main>
+      </div>
+      <Footer />
+    </>
   );
 }
 

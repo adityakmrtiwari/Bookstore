@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import './BookForm.css';
 
 function BookForm({ selectedBook, setSelectedBook, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -88,30 +87,33 @@ function BookForm({ selectedBook, setSelectedBook, onSuccess }) {
   };
 
   return (
-    <div className="book-form-container card">
-      <div className="form-header">
-        <h2>{selectedBook ? 'Edit Book' : 'Add New Book'}</h2>
-        <p>{selectedBook ? 'Update your book details' : 'Fill in the details to add a new book'}</p>
+    <div className="w-full max-w-md mx-auto bg-white/10 backdrop-blur border border-white/30 rounded-xl shadow-elegant p-6">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold text-primary mb-2 fade-in">{selectedBook ? 'Edit Book' : 'Add New Book'}</h2>
+        <p className="text-accent-600">{selectedBook ? 'Update your book details' : 'Fill in the details to add a new book'}</p>
       </div>
 
       {error && (
-        <div className="alert alert-error">
-          <span className="alert-icon">⚠️</span>
-          <span>{error}</span>
+        <div className="bg-accent-100 border-l-4 border-primary text-accent-800 p-4 mb-6 rounded fade-in">
+          <p className="flex items-center gap-2">
+            <span className="text-lg">⚠️</span>
+            <span>{error}</span>
+          </p>
         </div>
       )}
 
       {success && (
-        <div className="alert alert-success">
-          <span className="alert-icon">✅</span>
-          <span>{success}</span>
+        <div className="bg-accent-100 border-l-4 border-accent-800 text-accent-800 p-4 mb-6 rounded fade-in">
+          <p className="flex items-center gap-2">
+            <span className="text-lg">✅</span>
+            <span>{success}</span>
+          </p>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="book-form">
-        <div className="form-group">
-          <label htmlFor="title">
-            <span className="input-icon">📖</span>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <label htmlFor="title" className="block text-accent-800 font-medium">
             Title
           </label>
           <input
@@ -123,13 +125,12 @@ function BookForm({ selectedBook, setSelectedBook, onSuccess }) {
             placeholder="Enter book title"
             required
             disabled={loading}
-            className="form-input"
+            className="input-field"
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="author">
-            <span className="input-icon">✍️</span>
+        <div className="space-y-2">
+          <label htmlFor="author" className="block text-accent-800 font-medium">
             Author
           </label>
           <input
@@ -141,13 +142,12 @@ function BookForm({ selectedBook, setSelectedBook, onSuccess }) {
             placeholder="Enter author name"
             required
             disabled={loading}
-            className="form-input"
+            className="input-field"
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="category">
-            <span className="input-icon">🏷️</span>
+        <div className="space-y-2">
+          <label htmlFor="category" className="block text-accent-800 font-medium">
             Category
           </label>
           <select
@@ -157,7 +157,7 @@ function BookForm({ selectedBook, setSelectedBook, onSuccess }) {
             onChange={handleChange}
             required
             disabled={loading}
-            className="form-input"
+            className="input-field"
           >
             <option value="">Select a category</option>
             <option value="Fiction">Fiction</option>
@@ -170,10 +170,9 @@ function BookForm({ selectedBook, setSelectedBook, onSuccess }) {
           </select>
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="price">
-              <span className="input-icon">💰</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="price" className="block text-accent-800 font-medium">
               Price
             </label>
             <input
@@ -187,13 +186,12 @@ function BookForm({ selectedBook, setSelectedBook, onSuccess }) {
               step="0.01"
               required
               disabled={loading}
-              className="form-input"
+              className="input-field"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="rating">
-              <span className="input-icon">⭐</span>
+          <div className="space-y-2">
+            <label htmlFor="rating" className="block text-accent-800 font-medium">
               Rating
             </label>
             <input
@@ -202,20 +200,19 @@ function BookForm({ selectedBook, setSelectedBook, onSuccess }) {
               name="rating"
               value={formData.rating}
               onChange={handleChange}
-              placeholder="Enter rating"
-              min="0"
+              placeholder="Enter rating (1-5)"
+              min="1"
               max="5"
               step="0.1"
               required
               disabled={loading}
-              className="form-input"
+              className="input-field"
             />
           </div>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="publishedDate">
-            <span className="input-icon">📅</span>
+        <div className="space-y-2">
+          <label htmlFor="publishedDate" className="block text-accent-800 font-medium">
             Published Date
           </label>
           <input
@@ -226,41 +223,35 @@ function BookForm({ selectedBook, setSelectedBook, onSuccess }) {
             onChange={handleChange}
             required
             disabled={loading}
-            className="form-input"
+            className="input-field"
           />
         </div>
 
-        <div className="form-actions">
+        <div className="flex flex-col sm:flex-row gap-3 pt-4">
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn btn-primary flex-1"
+          >
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <div className="loading-spinner w-6 h-6"></div>
+                <span className="ml-2">Saving...</span>
+              </div>
+            ) : (
+              selectedBook ? 'Update Book' : 'Add Book'
+            )}
+          </button>
           {selectedBook && (
             <button
               type="button"
               onClick={handleCancel}
-              className="btn btn-outline"
               disabled={loading}
+              className="btn btn-outline flex-1"
             >
-              <span className="icon">❌</span>
               Cancel
             </button>
           )}
-          <button
-            type="submit"
-            className="btn btn-success"
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <span className="loading-spinner"></span>
-                {selectedBook ? 'Updating...' : 'Adding...'}
-              </>
-            ) : (
-              <>
-                <span className="icon">
-                  {selectedBook ? '✏️' : '➕'}
-                </span>
-                {selectedBook ? 'Update Book' : 'Add Book'}
-              </>
-            )}
-          </button>
         </div>
       </form>
     </div>

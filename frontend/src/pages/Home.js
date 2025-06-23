@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import './Home.css';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 function Home({ isAuthenticated, setIsAuthenticated }) {
   const [user, setUser] = useState(null);
@@ -55,248 +56,193 @@ function Home({ isAuthenticated, setIsAuthenticated }) {
     fetchStats();
   }, []);
 
-  // Logo click: always go to home page
-  const handleLogoClick = (e) => {
-    e.preventDefault();
-    navigate('/');
-  };
+  const dummyTestimonials = [
+    { name: 'Riya Sharma', comment: 'Helped me organize my reading life!', avatar: 'https://randomuser.me/api/portraits/women/45.jpg' },
+    { name: 'Aman Gupta', comment: 'The smart search is a game changer.', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
+    { name: 'Neha Das', comment: 'Saves so much time managing books.', avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
+  ];
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-    setUser(null);
-    navigate('/', { replace: true });
-  };
+  const dummyTrendingBooks = [
+    { title: 'Atomic Habits', author: 'James Clear' },
+    { title: 'The Pragmatic Programmer', author: 'Andy Hunt' },
+    { title: 'Deep Work', author: 'Cal Newport' },
+  ];
 
   return (
-    <div className="home-container">
-      <nav className="home-nav compact-nav">
-        <div className="nav-content compact-nav-content">
-          <button onClick={handleLogoClick} className="logo" title="Bookstore Home">
-            <img src="/logo-bookstore.jpeg" alt="Bookstore Logo" className="logo-img" />
-            <span className="logo-title">BookStore</span>
-          </button>
-          <div className="nav-links compact-nav-links">
-            {isAuthenticated ? (
-              <>
-                <Link to="/dashboard" className="btn btn-outline">
-                  <span className="icon">📚</span>
-                  Dashboard
-                </Link>
-                <button onClick={handleLogout} className="btn btn-danger">
-                  <span className="icon">🚪</span>
-                  Logout
-                </button>
-              </>
+    <>
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-accent-100 to-secondary">
+        <Header isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} user={user} />
+        <main className="flex-1 flex flex-col items-center px-4 py-8 gap-12">
+          {/* Hero Section */}
+          <section className="card max-w-3xl w-full text-center fade-in bg-white/10 backdrop-blur border border-white/20 rounded-xl">
+            <div className="flex flex-col items-center gap-4">
+              <span className="text-5xl">📚</span>
+              <h1 className="text-4xl font-extrabold text-primary mb-2">Welcome to Your Digital Library</h1>
+              <p className="text-accent-600 text-lg mb-6">Discover, manage, and organize your books with ease.</p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/signup" className="btn btn-primary">Get Started</Link>
+                <Link to="#features" className="btn btn-outline">Learn More</Link>
+              </div>
+            </div>
+          </section>
+
+          {/* Features Section */}
+          <section id="features" className="card max-w-4xl w-full fade-in bg-white/10 backdrop-blur border border-white/20 rounded-xl">
+            <h2 className="text-2xl font-bold text-primary mb-8 flex items-center gap-2">✨ Features</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur rounded-xl p-6 text-center hover:shadow-xl border border-white/20">
+                <span className="text-3xl mb-3">📚</span>
+                <h3 className="font-semibold text-primary mb-2">Book Management</h3>
+                <p className="text-accent-600 text-sm">Easily add, edit, and organize your books.</p>
+              </div>
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur rounded-xl p-6 text-center hover:shadow-xl border border-white/20">
+                <span className="text-3xl mb-3">🔍</span>
+                <h3 className="font-semibold text-primary mb-2">Smart Search</h3>
+                <p className="text-accent-600 text-sm">Find books instantly with advanced search.</p>
+              </div>
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur rounded-xl p-6 text-center hover:shadow-xl border border-white/20">
+                <span className="text-3xl mb-3">📱</span>
+                <h3 className="font-semibold text-primary mb-2">Mobile Friendly</h3>
+                <p className="text-accent-600 text-sm">Access your library on any device.</p>
+              </div>
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur rounded-xl p-6 text-center hover:shadow-xl border border-white/20">
+                <span className="text-3xl mb-3">🏷️</span>
+                <h3 className="font-semibold text-primary mb-2">Categories</h3>
+                <p className="text-accent-600 text-sm">Organize books by genre and category.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Tech Stacks Section */}
+          <section className="card max-w-3xl w-full fade-in bg-white/10 backdrop-blur border border-white/20 rounded-xl mt-4">
+            <h2 className="text-2xl font-bold text-primary mb-4 flex items-center gap-2">🛠️ Tech Stacks</h2>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <div className="flex flex-col items-center">
+                <span className="text-3xl mb-1">⚛️</span>
+                <span className="text-primary font-semibold">React</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="text-3xl mb-1">🌐</span>
+                <span className="text-primary font-semibold">Node.js</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="text-3xl mb-1">🍃</span>
+                <span className="text-primary font-semibold">MongoDB</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="text-3xl mb-1">🎨</span>
+                <span className="text-primary font-semibold">Tailwind CSS</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="text-3xl mb-1">🔗</span>
+                <span className="text-primary font-semibold">Express.js</span>
+              </div>
+            </div>
+          </section>
+
+          {/* Trending Books */}
+          <section className="card max-w-3xl w-full fade-in bg-white/10 backdrop-blur border border-white/20 rounded-xl">
+            <h2 className="text-2xl font-bold text-primary mb-4 flex items-center gap-2">🔥 Trending Books</h2>
+            <ul className="divide-y divide-accent-200">
+              {dummyTrendingBooks.map((book, i) => (
+                <li key={i} className="py-2 flex justify-between text-accent-700">
+                  <span className="flex items-center gap-2"><span className="text-lg">📘</span> <span>{book.title}</span></span>
+                  <span className="text-sm text-accent-500 flex items-center gap-1">👤 {book.author}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Platform Stats Section */}
+          <section className="card max-w-4xl w-full fade-in bg-white/10 backdrop-blur border border-white/20 rounded-xl">
+            <h2 className="text-2xl font-bold text-primary mb-8 flex items-center gap-2">📊 Platform Statistics</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="bg-white/10 backdrop-blur rounded-xl p-6 text-center border border-white/20 flex flex-col items-center">
+                <span className="text-3xl mb-3">👥</span>
+                <h3 className="font-bold text-3xl text-primary mb-2">{stats.totalUsers}</h3>
+                <p className="text-accent-600">Total Users</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur rounded-xl p-6 text-center border border-white/20 flex flex-col items-center">
+                <span className="text-3xl mb-3">📚</span>
+                <h3 className="font-bold text-3xl text-primary mb-2">{stats.totalBooks}</h3>
+                <p className="text-accent-600">Books Added</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur rounded-xl p-6 text-center border border-white/20 flex flex-col items-center">
+                <span className="text-3xl mb-3">🏷️</span>
+                <h3 className="font-bold text-3xl text-primary mb-2">{stats.topGenres.length}</h3>
+                <p className="text-accent-600">Active Genres</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Active Genres Section */}
+          <section className="card max-w-4xl w-full fade-in bg-white/10 backdrop-blur border border-white/20 rounded-xl">
+            <h2 className="text-2xl font-bold text-primary mb-6 flex items-center gap-2">🏷️ Active Genres</h2>
+            {stats.topGenres && stats.topGenres.length > 0 ? (
+              <div className="flex flex-wrap gap-3 justify-center">
+                {stats.topGenres.map((genre, i) => (
+                  <span key={i} className="px-4 py-2 rounded-full bg-primary/80 text-white font-semibold text-sm shadow-elegant border border-white/20 flex items-center gap-2">
+                    <span>🏷️</span> {genre}
+                  </span>
+                ))}
+              </div>
             ) : (
-              <>
-                <Link to="/login" className="btn btn-outline">
-                  <span className="icon">🔑</span>
-                  Login
-                </Link>
-                <Link to="/signup" className="btn btn-primary">
-                  <span className="icon">✨</span>
-                  Sign Up
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </nav>
-
-      <main className="home-main">
-        {isAuthenticated ? (
-          <section className="welcome-section card">
-            <div className="user-welcome">
-              <div className="user-avatar">
-                {user?.name?.[0]?.toUpperCase() || '👤'}
-              </div>
-              <div className="user-info">
-                <h2>Welcome back, {user?.name || user?.email?.split('@')[0]}!</h2>
-                <p>Manage your books and discover new ones</p>
-              </div>
-            </div>
-            <div className="quick-actions">
-              <Link to="/dashboard" className="btn btn-primary">
-                <span className="icon">📚</span>
-                Go to Dashboard
-              </Link>
-            </div>
-
-            {recentBooks.length > 0 && (
-              <section className="recent-books">
-                <h3>Your Recent Books</h3>
-                <ul className="book-list">
-                  {recentBooks.map((book) => (
-                    <li key={book._id}>📘 {book.title}</li>
-                  ))}
-                </ul>
-              </section>
+              <p className="text-accent-600 text-center">No active genres found.</p>
             )}
           </section>
-        ) : (
-          <section className="hero-section card">
-            <div className="hero-content">
-              <h1>Welcome to Your Digital Library</h1>
-              <p>Discover, manage, and organize your books in one place</p>
-              <div className="hero-buttons">
-                <Link to="/signup" className="btn btn-primary">
-                  <span className="icon">🚀</span>
-                  Get Started
-                </Link>
-                <Link to="#features" className="btn btn-outline">
-                  <span className="icon">📖</span>
-                  Learn More
-                </Link>
+
+          {/* Testimonials */}
+          <section className="card max-w-4xl w-full fade-in bg-white/10 backdrop-blur border border-white/20 rounded-xl">
+            <h2 className="text-2xl font-bold text-primary mb-6 flex items-center gap-2">💬 What Our Users Say</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {dummyTestimonials.map((t, i) => (
+                <div key={i} className="bg-white/10 backdrop-blur border border-white/20 rounded-xl p-4 text-center flex flex-col items-center">
+                  <img src={t.avatar} className="w-16 h-16 rounded-full mx-auto mb-2 border-2 border-primary" alt={t.name} />
+                  <p className="italic text-accent-600 mb-2 flex items-center gap-1"><span>"</span>{t.comment}<span>"</span></p>
+                  <h4 className="font-semibold text-primary flex items-center gap-1">👤 {t.name}</h4>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Mission Section */}
+          <section className="card max-w-3xl w-full fade-in bg-white/10 backdrop-blur border border-white/20 rounded-xl">
+            <h2 className="text-2xl font-bold text-primary mb-4 flex items-center gap-2">🎯 Our Mission</h2>
+            <p className="text-accent-600 flex items-center gap-2"><span>📖</span> BookStore is designed to help book enthusiasts and collectors manage their personal libraries efficiently. We believe in making book management accessible, organized, and enjoyable for everyone.</p>
+          </section>
+
+          {/* Developer Section */}
+          <section className="card max-w-3xl w-full fade-in bg-white/10 backdrop-blur border border-white/20 rounded-xl mt-8">
+            <div className="flex flex-col sm:flex-row items-center gap-8">
+              <img src="/logo-bookstore.jpeg" alt="Aditya Kumar Tiwari" className="w-28 h-28 rounded-full object-cover border-4 border-primary shadow-elegant mb-4 sm:mb-0" />
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold text-primary mb-2 flex items-center gap-2">👨‍💻 Aditya Kumar Tiwari</h2>
+                <p className="text-accent-700 text-lg font-semibold mb-2">Full Stack Developer & Book Enthusiast</p>
+                <p className="text-accent-600 mb-3">Passionate about building scalable web apps, UI/UX, and open source. Loves reading, tech, and helping others learn.</p>
+                <div className="flex flex-wrap gap-3 mb-3">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20"><span>💻</span> MERN Stack</span>
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20"><span>🎨</span> UI/UX</span>
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20"><span>📚</span> Books</span>
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20"><span>🚀</span> Productivity</span>
+                </div>
+                <div className="flex gap-3 mt-2">
+                  <a href="https://github.com/adityakmrtiwari" target="_blank" rel="noopener noreferrer" className="btn btn-outline">GitHub</a>
+                  <a href="https://www.linkedin.com/in/adityakmrtiwari/" target="_blank" rel="noopener noreferrer" className="btn btn-outline">LinkedIn</a>
+                </div>
               </div>
             </div>
           </section>
-        )}
 
-        {/* Mission Section */}
-        <section className="mission-section card">
-          <h2 className="section-title">🌟 Our Mission</h2>
-          <p>
-            BookStore is designed to help book enthusiasts and collectors manage their personal libraries
-            efficiently. We believe in making book management accessible, organized, and enjoyable for everyone.
-          </p>
-        </section>
-
-        {/* Features Section */}
-        <section id="features" className="features-section card">
-          <h2 className="section-title">🚀 What We Offer</h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <span className="feature-icon">📚</span>
-              <h3>Book Management</h3>
-              <p>Add, edit, and organize your books with ease</p>
-            </div>
-            <div className="feature-card">
-              <span className="feature-icon">🔍</span>
-              <h3>Smart Search</h3>
-              <p>Find your books quickly with our powerful search</p>
-            </div>
-            <div className="feature-card">
-              <span className="feature-icon">📱</span>
-              <h3>Mobile Friendly</h3>
-              <p>Access your library from any device</p>
-            </div>
-            <div className="feature-card">
-              <span className="feature-icon">🏷️</span>
-              <h3>Categories</h3>
-              <p>Organize books by genres and tags</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className="stats-section card">
-          <h2 className="section-title">📊 Platform Statistics</h2>
-          <div className="stats-grid">
-            <div className="stat-card">
-              <span className="stat-icon">👥</span>
-              <h3>{stats.totalUsers}</h3>
-              <p>Total Users</p>
-            </div>
-            <div className="stat-card">
-              <span className="stat-icon">📚</span>
-              <h3>{stats.totalBooks}</h3>
-              <p>Books Added</p>
-            </div>
-            <div className="stat-card">
-              <span className="stat-icon">🏆</span>
-              <h3>{stats.topGenres.length}</h3>
-              <p>Popular Genres</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Tech Stack Section */}
-        <section className="tech-stack-section card">
-          <h2 className="section-title">🛠 Technology Stack</h2>
-          <div className="tech-grid">
-            <div className="tech-card">
-              <h3>Frontend</h3>
-              <ul>
-                <li>React.js</li>
-                <li>React Router</li>
-                <li>Axios</li>
-                <li>CSS3</li>
-              </ul>
-            </div>
-            <div className="tech-card">
-              <h3>Backend</h3>
-              <ul>
-                <li>Node.js</li>
-                <li>Express.js</li>
-                <li>MongoDB</li>
-                <li>JWT Authentication</li>
-              </ul>
-            </div>
-            <div className="tech-card">
-              <h3>Tools & Services</h3>
-              <ul>
-                <li>Git</li>
-                <li>npm</li>
-                <li>MongoDB Atlas</li>
-                <li>VS Code</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* Developer Section */}
-        <section className="developer-section card">
-          <h2 className="section-title">👨‍💻 About the Developer</h2>
-          <div className="developer-card">
-            <div className="developer-info">
-              <h3>Aditya Kumar Tiwari</h3>
-              <p className="developer-role">Full Stack Developer</p>
-              <p className="developer-bio">
-                A passionate developer focused on creating user-friendly web applications.
-                This project was built with the goal of helping book lovers manage their
-                collections more effectively.
-              </p>
-              <div className="developer-links">
-                <a href="https://github.com/adityakmrtiwari" target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-                  <span className="icon">🐙</span>
-                  GitHub
-                </a>
-                <a href="https://www.linkedin.com/in/adityakmrtiwari/" target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-                  <span className="icon">💼</span>
-                  LinkedIn
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section className="contact-section card">
-          <h2 className="section-title">📬 Have Questions?</h2>
-          <p>Reach out to us at <a href="mailto:support@bookstore.com" className="btn btn-outline">
-            <span className="icon">✉️</span>
-            adityakmrtiwari@gmail.com
-          </a></p>
-        </section>
-      </main>
-
-      <footer className="home-footer compact-footer">
-        <div className="footer-content compact-footer-content">
-          <span>&copy; 2025 BookStore</span>
-          <span className="footer-links compact-footer-links">
-            <a href="https://github.com/adityakmrtiwari" target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-              <span className="icon">🐙</span>
-              GitHub
-            </a>
-            <a href="https://www.linkedin.com/in/adityakmrtiwari/" target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-              <span className="icon">💼</span>
-              LinkedIn
-            </a>
-          </span>
-        </div>
-      </footer>
-    </div>
+          {/* Reach Out Section */}
+          <section className="card max-w-2xl w-full fade-in text-center bg-white/10 backdrop-blur border border-white/20 rounded-xl mt-4">
+            <h2 className="text-2xl font-bold text-primary mb-2">📬 Reach Out to Us</h2>
+            <p className="text-accent-600 mb-4">Have questions, suggestions, or want to collaborate?</p>
+            <a href="mailto:adityakmrtiwari@gmail.com" className="btn btn-primary inline-block">Email: adityakmrtiwari@gmail.com</a>
+          </section>
+        </main>
+      </div>
+      <Footer />
+    </>
   );
 }
 

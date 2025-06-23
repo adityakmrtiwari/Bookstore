@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
-import './Login.css';
 
 function Login({ setIsAuthenticated }) {
   const [formData, setFormData] = useState({
@@ -40,28 +39,29 @@ function Login({ setIsAuthenticated }) {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card card">
-        <div className="auth-header">
-          <Link to="/" className="logo">
-            <img src="/logo-bookstore.jpeg" alt="Bookstore Logo" className="logo-img" />
-            <h1>BookStore</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-accent-100 to-secondary py-8 px-4">
+      <div className="card max-w-md w-full fade-in">
+        <div className="text-center mb-8">
+          <Link to="/" className="flex items-center justify-center gap-2 mb-4">
+            <img src="/logo-bookstore.jpeg" alt="Bookstore Logo" className="w-12 h-12 rounded-lg object-cover shadow-elegant" />
+            <h1 className="text-3xl font-bold text-primary">BookStore</h1>
           </Link>
-          <h2>Welcome Back!</h2>
-          <p>Sign in to continue to your account</p>
+          <h2 className="text-2xl font-semibold text-accent-800 mb-2">Welcome Back</h2>
+          <p className="text-accent-600">Sign in to continue to your account</p>
         </div>
 
         {error && (
-          <div className="alert alert-error">
-            <span className="alert-icon">⚠️</span>
-            <span>{error}</span>
+          <div className="bg-accent-100 border-l-4 border-primary text-accent-800 p-4 mb-6 rounded fade-in">
+            <p className="flex items-center gap-2">
+              <span className="text-lg">⚠️</span>
+              <span>{error}</span>
+            </p>
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label htmlFor="email">
-              <span className="input-icon">✉️</span>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="email" className="block text-accent-800 font-medium">
               Email
             </label>
             <input
@@ -73,13 +73,12 @@ function Login({ setIsAuthenticated }) {
               required
               placeholder="Enter your email"
               disabled={loading}
-              className="form-input"
+              className="input-field"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">
-              <span className="input-icon">🔒</span>
+          <div className="space-y-2">
+            <label htmlFor="password" className="block text-accent-800 font-medium">
               Password
             </label>
             <input
@@ -91,38 +90,34 @@ function Login({ setIsAuthenticated }) {
               required
               placeholder="Enter your password"
               disabled={loading}
-              className="form-input"
+              className="input-field"
             />
           </div>
 
           <button 
             type="submit" 
-            className="btn btn-primary"
+            className="btn btn-primary w-full"
             disabled={loading}
           >
             {loading ? (
-              <>
-                <span className="loading-spinner"></span>
-                Signing in...
-              </>
+              <div className="flex items-center justify-center">
+                <div className="loading-spinner w-6 h-6"></div>
+                <span className="ml-2">Signing in...</span>
+              </div>
             ) : (
-              <>
-                <span className="icon">🔑</span>
-                Sign In
-              </>
+              'Sign In'
             )}
           </button>
         </form>
 
-        <div className="auth-footer">
-          <p>
+        <div className="mt-8 text-center space-y-4">
+          <p className="text-accent-600">
             Don't have an account?{' '}
-            <Link to="/signup" className="auth-link">
+            <Link to="/signup" className="text-primary hover:text-accent-800 font-medium transition-colors">
               Sign up
             </Link>
           </p>
-          <Link to="/" className="btn btn-outline">
-            <span className="icon">🏠</span>
+          <Link to="/" className="btn btn-outline inline-block">
             Back to Home
           </Link>
         </div>

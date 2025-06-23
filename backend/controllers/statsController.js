@@ -11,10 +11,10 @@ exports.getPublicStats = async (req, res) => {
 
     // Get top genres
     const genreCounts = {};
-    const booksWithGenres = await Book.find({ genre: { $exists: true } });
+    const booksWithGenres = await Book.find({ category: { $exists: true } });
     booksWithGenres.forEach(book => {
-      if (book.genre) {
-        genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1;
+      if (book.category) {
+        genreCounts[book.category] = (genreCounts[book.category] || 0) + 1;
       }
     });
 

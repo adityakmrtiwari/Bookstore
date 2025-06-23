@@ -153,3 +153,23 @@ exports.refreshToken = async (req, res) => {
     res.status(401).json({ message: 'Invalid refresh token' });
   }
 };
+
+// Update profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { name, email, password } = req.body;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (password) user.password = password;
+    await user.save();
+    res.json({ success: true, user: { _id: user._id, name: user.name, email: user.email, role: user.role } });
+  } catch (error) {
+    console.error('Profile update error:', error);
+    res.status(500).json({ success: false, message: error.message || 'Error updating profile' });
+  }
+};
